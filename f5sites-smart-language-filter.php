@@ -298,22 +298,23 @@ function smartlang_generate_flag_links_except($except, $show_name) { ?>
 function smartlang_check_language_user_and_content($tags) {
 	global $user_prefered_language;
 	global $user_prefered_language_prefix;
-	
-	if($tags) {
+	#
+	if(isset($tags)) {
 		foreach ($tags as $tag) {
-			# code...
-			if(substr($tag->slug, 0, 5)=="lang-") {
-				$content_lang = substr($tag->slug, 5, 7);
-				if($user_prefered_language_prefix!=$content_lang) { ?>
-					<div class="alert alert-warning">
-					<strong><?php _e("Warning!", "sis-foca-js"); ?></strong> 
-					<?php _e("These content is not avaiable in your language. Original content language is: ", "sis-foca-js");
-					echo "<strong>".$content_lang."</strong>";
-					echo "<br>";
-					echo "<a href='/'>".__("Go to blog homepage", "sis-foca-js")." IN YOUR LANGUAGE | IN CURRENTE LANGUAGE</a>";
-					#echo "These content is not avaiable in your language";	] ?>
-					</div>
-				<?php }
+			if(isset($tag->slug)) {			
+				if(substr($tag->slug, 0, 5)=="lang-") {
+					$content_lang = substr($tag->slug, 5, 7);
+					if($user_prefered_language_prefix!=$content_lang) { ?>
+						<div class="alert alert-warning">
+						<strong><?php _e("Warning!", "sis-foca-js"); ?></strong> 
+						<?php _e("These content is not avaiable in your language. Original content language is: ", "sis-foca-js");
+						echo "<strong>".$content_lang."</strong>";
+						echo "<br>";
+						echo "<a href='/'>".__("Go to blog homepage", "sis-foca-js")." IN YOUR LANGUAGE | IN CURRENTE LANGUAGE</a>";
+						#echo "These content is not avaiable in your language";	] ?>
+						</div>
+					<?php }
+				}
 			}
 		}
 	}
