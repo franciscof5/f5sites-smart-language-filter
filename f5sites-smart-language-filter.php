@@ -100,7 +100,9 @@ function smartlang_set_user_language() {
 	#echo "~ASDASD";die;
 	global $user_prefered_language;
 	global $user_prefered_language_prefix;
-	session_start();
+	#
+	if (session_status() == PHP_SESSION_NONE)
+		session_start();
 
 	//Try WooCommerce geolocate
 	if(class_exists("WC_Geolocation")) {
