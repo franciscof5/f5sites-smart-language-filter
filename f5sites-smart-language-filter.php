@@ -4,6 +4,7 @@ Plugin Name: F5 Sites | Smart Language Filter
 Plugin URI: https://www.f5sites.com/f5sites-smart-language-filter/
 Plugin Description: Use tags lang-en or lang-x to filter post content. It first try to use WooCommerce geolocalization, then basic php http geolocation.
 Plugin Author: Francisco Mat
+Version 1.1
 Author URI: https://www.franciscomat.com/
 License: GPLv3
 */
@@ -18,49 +19,33 @@ global $base_link;
 $base_link = $_SERVER['SERVER_NAME']; 
 $base_link = preg_replace('/\?.*/', '', $base_link);
 
+$domainfull = $_SERVER["HTTP_HOST"];
+$domain_exploded = explode('.', $domainfull);
+if(count($domain_exploded)>2) {
+	//subdomina
+	$domain_exploded = array_reverse($domain_exploded);
+	$base_link = "www.".$domain_exploded[1].".".$domain_exploded[0];
+}
+
 #function smartlang_filter_by_tag($post_object, $query) {
 function smartlang_filter_by_tag($query) {
-	#
-	#if(has_tag("lang-es", $post_object->ID))
-		#echo "AAAAA $post_object->ID";
-	#	return $post_object;
-	#else
-	#	wp_reset_postdata();
-
-	#return NULL;
-	#var_dump($query);die;
-	#echo "AQUI CHAMOU";
 	if ( $query->is_home() && $query->is_main_query() ) {
-		#echo "AQUI FILTROU";
-		#if(function_exists('set_shared_database_schema'))set_shared_database_schema();
-			#wp_reset_query();
-			global $base_link;
-			$idObj = get_category_by_slug($base_link); 
-
-			global $user_prefered_language;
-			
-			#$user_prefered_language_prefix = substr($user_prefered_language, 0,2);
-			global $user_prefered_language_prefix;
-			$arro = array(
-				'cat' => $idObj->term_id,
-				'posts_per_page' => 10,
-				'tag' => "lang-".$user_prefered_language_prefix,
-			);
-			
-			/*if($user_prefered_language=="en" || $user_prefered_language=="en_US")
-				#$args[] = array("tag"=>"english");
-				$arro["tag"] = "english";
-			else 
-				$arro["tag__not_in"] = 579;*/
-			#wp_reset_query();
-			#$catquery9 = new WP_Query( $arro );
-			#$query = $catquery9;
-		#$q = new WP_Query( 'posts_per_page=5' );
-		#$query = $q;
-		#$args = array(
-		#	'posts_per_page' => '5',
-		#);
-		#$query = new WP_Query($args);
+		global $base_link;
+		$idObj = get_category_by_slug($base_link); 
+		
+		#not configured yet (problably not f5sites shared posts)
+		if(!$idObj)
+			return;
+		
+		global $user_prefered_language;
+		
+		#$user_prefered_language_prefix = substr($user_prefered_language, 0,2);
+		global $user_prefered_language_prefix;
+		$arro = array(
+			'cat' => $idObj->term_id,
+			'posts_per_page' => 10,
+			'tag' => "lang-".$user_prefered_language_prefix,
+		);
 		
 		$query->set('posts_per_page', -1);
 		$taxquery = array(
@@ -72,32 +57,10 @@ function smartlang_filter_by_tag($query) {
 			)
 		);      
 		$query->set('tax_query', $taxquery);
-		/*
-		$tax_query = array(
-				'taxonomy' => 'post_tag', 
-				'field' => 'slug', 
-				'terms' => "lang-".$user_prefered_language_prefix,
-            	'operator'=> 'IN' );
-		$query->tax_query->queries[] = $tax_query; 
-		$query->query_vars['tax_query'] = $query->tax_query->queries;
-		*/
 	}
-
-	/*$tax_query = array(
-				'taxonomy' => 'tag', 
-				'field' => 'slug', 
-				'terms' => "lang-".$user_prefered_language_prefix,
-            	'operator'=> 'IN' );
-	$query->tax_query->queries[] = $tax_query; 
-	$query->query_vars['tax_query'] = $query->tax_query->queries;
-*/
-	#var_dump($user_prefered_language);die;
-
-	#return $user_prefered_language;
 }
 
 function smartlang_set_user_language() {
-	#echo "~ASDASD";die;
 	global $user_prefered_language;
 	global $user_prefered_language_prefix;
 	#
@@ -111,7 +74,7 @@ function smartlang_set_user_language() {
 	}
 
 	//If not, then uses basic http
-	if(!$user_location_georefered) {
+	if(!isset($user_location_georefered)) {
 		if(function_exists("locale_accept_from_http"))
 			$user_location_georefered = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		//Last case it sets en_US
@@ -204,19 +167,12 @@ function smartlang_show_lang_options($hide_title=false, $show_name=false, $curre
 			$current_location = "notset";
 	} ?>
 
-		<?php 
-		if(!$hide_title) { ?>
-			<strong>Change Language:</strong>
-		<?php }
-		/*if($showtitle_in_h3) { ?>
-			<h3 class="widget-title">Change Language</h3>
-		<?php } else { ?>
-			<strong>Change Language:</strong>
-		<?php } */ ?>
+	<?php 
+	if(!$hide_title) { ?>
+		<strong>Change Language:</strong>
+	<?php } ?>
 
 	<?php
-	#var_dump($user_prefered_language);
-	#var_dump($current_location);die;
 	switch ($current_location) {
 		//smartlang_generate_flag_links_except($current_location);
 		case 'notset' :
@@ -249,22 +205,6 @@ function smartlang_show_lang_options($hide_title=false, $show_name=false, $curre
 			generate_flag_links_except("en", $show_name);
 			break;
 	}
-	/*
-	if($current_location!="en" && $current_location!="en_US") { ?>
-		<?php if($showtitle_in_h3) { ?>
-			<h3 class="widget-title">Change Language</h3>
-		<?php } else { ?>
-			<strong>Change Language:</strong>
-		<?php } ?>
-		<a href="<?php echo get_bloginfo('url'); ?>/?lang=en_US"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/us.png" alt="Language Flag"> English</a>
-	<?php } else { ?>
-		<?php if($showtitle_in_h3) { ?>
-			<h3 class="widget-title">Mudar Idioma</h3>
-		<?php } else { ?>
-			<strong>Mudar Idioma:</strong>
-		<?php } ?>
-		<a href="<?php echo get_bloginfo('url'); ?>/?lang=pt_BR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/br.png" alt="Bandeira de Idioma"> Português</a>
-	<?php }*/
 }
 
 function smartlang_generate_flag_links_current($show_name) {
@@ -318,19 +258,16 @@ function smartlang_check_language_user_and_content($tags) {
 			}
 		}
 	}
-	#var_dump($user_prefered_language_prefix);die;
 }
 
 function smartlang_recent_posts_georefer_widget() {
-	#<h3><script>document.write(txt_foot_blog)</script></h3>
 	?>
 	<div class="widget DDDwidget_recent_entries">
 		<ul style="list-style: none;">
 		
 			<?php 
 			global $base_link;
-			#if(function_exists('set_shared_database_schema'))set_shared_database_schema();
-			#echo $base_link;die;
+			
 			$idObj = get_category_by_slug($base_link); 
 
 			global $user_prefered_language;
@@ -343,11 +280,6 @@ function smartlang_recent_posts_georefer_widget() {
 				'tag' => "lang-".$user_prefered_language_prefix,
 			);
 			
-			/*if($user_prefered_language=="en" || $user_prefered_language=="en_US")
-				#$args[] = array("tag"=>"english");
-				$arro["tag"] = "english";
-			else 
-				$arro["tag__not_in"] = 579;*/
 			wp_reset_query();
 			$catquery = new WP_Query( $arro );
 			while($catquery->have_posts()) : $catquery->the_post();
