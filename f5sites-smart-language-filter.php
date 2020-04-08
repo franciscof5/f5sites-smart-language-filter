@@ -202,7 +202,7 @@ function smartlang_show_lang_options($hide_title=false, $show_name=false, $curre
 			break;
 
 		default:
-			generate_flag_links_except("en", $show_name);
+			smartlang_generate_flag_links_except("en", $show_name);
 			break;
 	}
 }
