@@ -18,15 +18,18 @@ add_filter('pre_get_document_title', 'smartlang_define_title_apendix');
 global $base_link;
 $base_link = $_SERVER['SERVER_NAME']; 
 $base_link = preg_replace('/\?.*/', '', $base_link);
-
+/*
 $domainfull = $_SERVER["HTTP_HOST"];
+var_dump($domainfull);
 $domain_exploded = explode('.', $domainfull);
+var_dump($domain_exploded);
 if(count($domain_exploded)>2) {
 	//subdomina
 	$domain_exploded = array_reverse($domain_exploded);
+	var_dump($domain_exploded);
 	$base_link = "www.".$domain_exploded[1].".".$domain_exploded[0];
 }
-
+die;*/
 #function smartlang_filter_by_tag($post_object, $query) {
 function smartlang_filter_by_tag($query) {
 	if ( $query->is_home() && $query->is_main_query() ) {
@@ -108,6 +111,7 @@ function smartlang_set_user_language() {
 	if($user_prefered_language=="")
 		$user_prefered_language=="en_US";
 	
+	if(!is_admin())
 	switch_to_locale($user_prefered_language);
 	smartlang_define_title_apendix();
 	
@@ -259,17 +263,22 @@ function smartlang_check_language_user_and_content($tags) {
 
 function smartlang_recent_posts_georefer_widget() {
 	?>
-	<div class="widget DDDwidget_recent_entries">
+	<div class="widget smartlang_recent_posts_widget">
 		<ul style="list-style: none;">
 		
 			<?php 
 			global $base_link;
 			
+			if(function_exists("set_shared_database_schema"))
+				set_shared_database_schema();
 			$idObj = get_category_by_slug($base_link); 
-
+			if(!$idObj) {
+				echo "No category for posts found because F5 Sites Shared Posts not configured or enabled";
+				echo "</ul></div>";
+				return;
+			}
 			global $user_prefered_language;
 			
-			#$user_prefered_language_prefix = substr($user_prefered_language, 0,2);
 			global $user_prefered_language_prefix;
 			$arro = array(
 				'cat' => $idObj->term_id,
