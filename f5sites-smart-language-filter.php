@@ -210,28 +210,25 @@ function smartlang_show_lang_options($hide_title=false, $show_name=false, $curre
 function smartlang_generate_flag_links_current($show_name) {
 	global $user_prefered_language_prefix;
 	 ?>
-			<img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/<?php echo $user_prefered_language_prefix; ?>.png" alt="Language Flag" style="display: inline;"> <?php if($show_name) echo "English";?>
+			<img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/<?php echo $user_prefered_language_prefix; ?>.png" alt="<?php echo $user_prefered_language_prefix; ?>" style="display: inline;"> <?php if($show_name) echo "English";?>
 	<?php return;
 }
 
 function smartlang_generate_flag_links_except($except, $show_name) { ?>
-	<?php 
-		
-	?>
 	<?php if($except!="en" && $except!="en_US") { ?>
-		<a href="<?php echo $base_link; ?>?lang=en_US"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/en.png" alt="Language Flag"> <?php if($show_name) echo "English";?></a>
+		<a href="<?php echo $base_link; ?>?lang=en_US"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/en.png" alt="en"> <?php if($show_name) echo "English";?></a>
 	<?php } ?>
 	<?php if($except!="fr" && $except!="fr_FR") { ?>
-		<a href="<?php echo $base_link; ?>?lang=fr_FR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/fr.png" alt="Drapeau de langue"> <?php if($show_name) echo "Français";?></a>
+		<a href="<?php echo $base_link; ?>?lang=fr_FR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/fr.png" alt="fr"> <?php if($show_name) echo "Français";?></a>
 	<?php } ?>
 	<?php if($except!="pt" && $except!="pt_BR") { ?>
-		<a href="<?php echo $base_link; ?>?lang=pt_BR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/pt.png" alt="Bandeira de Idioma"> <?php if($show_name) echo "Português";?></a>
+		<a href="<?php echo $base_link; ?>?lang=pt_BR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/pt.png" alt="br"> <?php if($show_name) echo "Português";?></a>
 	<?php } ?>
 	<?php if($except!="es" && $except!="es_ES") { ?>
-		<a href="<?php echo $base_link; ?>?lang=es_ES"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/es.png" alt="Bandera de Idioma"> <?php if($show_name) echo "Spañol";?></a>
+		<a href="<?php echo $base_link; ?>?lang=es_ES"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/es.png" alt="es"> <?php if($show_name) echo "Spañol";?></a>
 	<?php } ?>
 	<?php if($except!="zh" && $except!="zh_CN") { ?>
-		<a href="<?php echo $base_link; ?>?lang=zh_CN"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/cn.png" alt="语言标志"> <?php if($show_name) echo "中文";?></a>
+		<a href="<?php echo $base_link; ?>?lang=zh_CN"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/cn.png" alt="zn"> <?php if($show_name) echo "中文";?></a>
 	<?php } ?>
 <?php }
 
