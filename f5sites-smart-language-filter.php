@@ -225,7 +225,9 @@ function smartlang_generate_flag_links_current($show_name) {
 }
 
 function smartlang_generate_flag_links_except($except, $show_name) { 
-	global $base_link; ?>
+	global $base_link;
+	if(!strpos($base_link, "http"))
+		$base_link = "https://".$base_link; ?>
 	<?php if($except!="en" && $except!="en_US") { ?>
 		<a href="<?php echo $base_link; ?>?lang=en_US"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/en.png" alt="en"> <?php if($show_name) echo "English";?></a>
 	<?php } ?>
