@@ -227,21 +227,21 @@ function smartlang_generate_flag_links_current($show_name) {
 function smartlang_generate_flag_links_except($except, $show_name) { 
 	global $base_link;
 	if(!strpos($base_link, "http"))
-		$base_link = "https://".$base_link; ?>
+		$base_link_full = "https://".$base_link; ?>
 	<?php if($except!="en" && $except!="en_US") { ?>
-		<a href="<?php echo $base_link; ?>?lang=en_US"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/en.png" alt="en"> <?php if($show_name) echo "English";?></a>
+		<a href="<?php echo $base_link_full; ?>?lang=en_US"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/en.png" alt="en"> <?php if($show_name) echo "English";?></a>
 	<?php } ?>
 	<?php if($except!="fr" && $except!="fr_FR") { ?>
-		<a href="<?php echo $base_link; ?>?lang=fr_FR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/fr.png" alt="fr"> <?php if($show_name) echo "Français";?></a>
+		<a href="<?php echo $base_link_full; ?>?lang=fr_FR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/fr.png" alt="fr"> <?php if($show_name) echo "Français";?></a>
 	<?php } ?>
 	<?php if($except!="pt" && $except!="pt_BR") { ?>
-		<a href="<?php echo $base_link; ?>?lang=pt_BR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/pt.png" alt="br"> <?php if($show_name) echo "Português";?></a>
+		<a href="<?php echo $base_link_full; ?>?lang=pt_BR"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/pt.png" alt="br"> <?php if($show_name) echo "Português";?></a>
 	<?php } ?>
 	<?php if($except!="es" && $except!="es_ES") { ?>
-		<a href="<?php echo $base_link; ?>?lang=es_ES"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/es.png" alt="es"> <?php if($show_name) echo "Spañol";?></a>
+		<a href="<?php echo $base_link_full; ?>?lang=es_ES"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/es.png" alt="es"> <?php if($show_name) echo "Spañol";?></a>
 	<?php } ?>
 	<?php if($except!="zh" && $except!="zh_CN") { ?>
-		<a href="<?php echo $base_link; ?>?lang=zh_CN"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/cn.png" alt="zn"> <?php if($show_name) echo "中文";?></a>
+		<a href="<?php echo $base_link_full; ?>?lang=zh_CN"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/cn.png" alt="zn"> <?php if($show_name) echo "中文";?></a>
 	<?php } ?>
 <?php }
 
@@ -273,40 +273,62 @@ function smartlang_check_language_user_and_content($tags) {
 function smartlang_recent_posts_georefer_widget() {
 	?>
 	<div class="widget smartlang_recent_posts_widget">
-		<ul style="list-style: none;">
+	
+	
+		<?php 
+		global $base_link;
 		
-			<?php 
-			global $base_link;
-			
-			if(function_exists("set_shared_database_schema"))
-				set_shared_database_schema();
-			$idObj = get_category_by_slug($base_link); 
-			if(!$idObj) {
-				echo "No category for posts found because F5 Sites Shared Posts not configured or enabled";
-				echo "</ul></div>";
-				return;
-			}
-			global $user_prefered_language;
-			
-			global $user_prefered_language_prefix;
-			$arro = array(
-				'cat' => $idObj->term_id,
-				'posts_per_page' => 10,
-				'tag' => "lang-".$user_prefered_language_prefix,
-			);
-			
-			wp_reset_query();
-			$catquery = new WP_Query( $arro );
+		if(function_exists("set_shared_database_schema"))
+			set_shared_database_schema();
+		$idObj = get_category_by_slug($base_link); 
+		#var_dump($base_link);die;
+		if(!$idObj) {
+			echo "No category for posts found because F5 Sites Shared Posts not configured or enabled";
+			echo "</ul></div>";
+			return;
+		}
+		global $user_prefered_language;
+		
+		global $user_prefered_language_prefix;
+		$arro = array(
+			'cat' => $idObj->term_id,
+			'posts_per_page' => 10,
+			'tag' => "lang-".$user_prefered_language_prefix,
+		);
+		
+		wp_reset_query();
+		$catquery = new WP_Query( $arro );
+		?>
+		<div class="container-fluid smartlang_recent_posts_widget_container">
+			<?php
 			while($catquery->have_posts()) : $catquery->the_post();
 			?>
-			
-			<li>
-				<?php the_post_thumbnail(array(50,50)); ?>
-				<a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a>
-			</li>
-			
+				<div class="row">
+					<div class="col-md-4 contem-thumb" style="background-image: url(<?php echo get_the_post_thumbnail_url(get_the_ID(),150); ?>);">
+						<?php #echo get_the_post_thumbnail_url(get_the_ID(),150); the_post_thumbnail(array(150,150)); ?>
+					</div>
+					<div class="col-md-8">
+						<a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a>
+					</div>
+				</div>
 			<?php endwhile;	?>
-		</ul>
+		</div>
 	</div>
+	<style type="text/css">
+		.smartlang_recent_posts_widget_container .row {
+			padding-bottom: 12px;
+		}
+		.smartlang_recent_posts_widget_container .contem-thumb {
+			background: #EDEDED;
+			min-height: 60px;
+			background-position: center;
+			background-size: contain;
+		}
+		.smartlang_recent_posts_widget_container div {
+			line-height: 15px;
+			padding-right: 5px !important;
+			padding-left: 5px !important;
+		}
+	</style>
 	<?php
 }
