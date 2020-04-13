@@ -8,7 +8,7 @@ Version 1.1
 Author URI: https://www.franciscomat.com/
 License: GPLv3
 */
-add_action('wp_loaded', 'smartlang_set_user_language');
+add_action('wp_loaded', 'smartlang_set_user_language', 1, 2);
 add_action('loop_start', 'smartlang_check_language_user_and_content');
 
 add_action('pre_get_posts', 'smartlang_filter_by_tag', 10, 2);
@@ -33,17 +33,20 @@ die;*/
 #function smartlang_filter_by_tag($post_object, $query) {
 function smartlang_filter_by_tag($query) {
 	if ( $query->is_home() && $query->is_main_query() ) {
+		global $user_prefered_language_prefix;
+		global $user_prefered_language;
 		global $base_link;
+		
+		#var_dump($user_prefered_language_prefix);die;
 		$idObj = get_category_by_slug($base_link); 
+		#var_dump($idObj);die;
 		
 		#not configured yet (problably not f5sites shared posts)
 		if(!$idObj)
 			return;
 		
-		global $user_prefered_language;
 		
 		#$user_prefered_language_prefix = substr($user_prefered_language, 0,2);
-		global $user_prefered_language_prefix;
 		$arro = array(
 			'cat' => $idObj->term_id,
 			'posts_per_page' => 10,
@@ -73,7 +76,10 @@ function smartlang_set_user_language() {
 	//Try WooCommerce geolocate
 	if(class_exists("WC_Geolocation")) {
 		$wclocation = WC_Geolocation::geolocate_ip();
-		$user_location_georefered = $wclocation['country'];
+		if($wclocation['country']=="")
+			$user_location_georefered="BR";
+		else
+			$user_location_georefered = $wclocation['country'];
 	}
 
 	//If not, then uses basic http
@@ -84,7 +90,6 @@ function smartlang_set_user_language() {
 		else
 			$user_location_georefered = "en_US";
 	}
-
 	//Corrects BR to pt_BR
 	if($user_location_georefered=="BR")
 		$user_location_georefered="pt_BR";
@@ -95,11 +100,12 @@ function smartlang_set_user_language() {
 	//Check/Save in session
 	//if(!isset($_SESSION["user_prefered_language"]))
 	//$_SESSION["user_prefered_language"]=$user_prefered_language;
-	if(isset($_SESSION["user_prefered_language"])) {
-		$user_prefered_language=$_SESSION["user_prefered_language"];
-	} else {
+	
+	#if(isset($_SESSION["user_prefered_language"]) && ) {
+	#	$user_prefered_language=$_SESSION["user_prefered_language"];
+	#} else {
 		$_SESSION["user_prefered_language"]=$user_prefered_language;
-	}
+	#}
 
 	//To change language by GET link, override previous language
 	if($_GET && isset($_GET["lang"])) {
