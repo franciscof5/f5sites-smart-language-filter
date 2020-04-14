@@ -277,24 +277,31 @@ function smartlang_recent_posts_georefer_widget() {
 	
 		<?php 
 		global $base_link;
+		global $user_prefered_language;
+		global $user_prefered_language_prefix;
 		
 		if(function_exists("set_shared_database_schema"))
 			set_shared_database_schema();
 		$idObj = get_category_by_slug($base_link); 
 		#var_dump($base_link);die;
 		if(!$idObj) {
-			echo "No category for posts found because F5 Sites Shared Posts not configured or enabled";
-			echo "</ul></div>";
-			return;
+			if($base_link=="www.cursowp.com.br") {
+				//problably not enabled f5sites shared posts, and so no category with base_link and no tag lang-PREFIX
+				$arro = array(
+					'posts_per_page' => 10,
+				);
+			} else {
+				echo "No category for posts found because F5 Sites Shared Posts not configured or enabled";
+				echo "</ul></div>";
+				return;
+			}
+		} else {
+			$arro = array(
+				'cat' => $idObj->term_id,
+				'posts_per_page' => 10,
+				'tag' => "lang-".$user_prefered_language_prefix,
+			);
 		}
-		global $user_prefered_language;
-		
-		global $user_prefered_language_prefix;
-		$arro = array(
-			'cat' => $idObj->term_id,
-			'posts_per_page' => 10,
-			'tag' => "lang-".$user_prefered_language_prefix,
-		);
 		
 		wp_reset_query();
 		$catquery = new WP_Query( $arro );
