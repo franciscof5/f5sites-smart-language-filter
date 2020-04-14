@@ -220,14 +220,14 @@ function smartlang_show_lang_options($hide_title=false, $show_name=false, $curre
 function smartlang_generate_flag_links_current($show_name) {
 	global $user_prefered_language_prefix;
 	 ?>
-			<img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/<?php echo $user_prefered_language_prefix; ?>.png" alt="<?php echo $user_prefered_language_prefix; ?>" style="display: inline;"> <?php if($show_name) echo "English";?>
+		<img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/<?php echo $user_prefered_language_prefix; ?>.png" alt="<?php echo $user_prefered_language_prefix; ?>" style="display: inline;"> <?php if($show_name) echo "English";?>
 	<?php return;
 }
 
 function smartlang_generate_flag_links_except($except, $show_name) { 
 	global $base_link;
 	if(!strpos($base_link, "http"))
-		$base_link_full = "https://".$base_link; ?>
+		$base_link_full = "https://".$base_link.strtok($_SERVER['REQUEST_URI'], "?"); ?>
 	<?php if($except!="en" && $except!="en_US") { ?>
 		<a href="<?php echo $base_link_full; ?>?lang=en_US"><img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/en.png" alt="en"> <?php if($show_name) echo "English";?></a>
 	<?php } ?>
