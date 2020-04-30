@@ -101,11 +101,11 @@ function smartlang_set_user_language() {
 	//if(!isset($_SESSION["user_prefered_language"]))
 	//$_SESSION["user_prefered_language"]=$user_prefered_language;
 	
-	#if(isset($_SESSION["user_prefered_language"]) && ) {
-	#	$user_prefered_language=$_SESSION["user_prefered_language"];
-	#} else {
+	if(isset($_SESSION["user_prefered_language"]) && $_SESSION["user_prefered_language"]!="") {
+		$user_prefered_language=$_SESSION["user_prefered_language"];
+	} else {
 		$_SESSION["user_prefered_language"]=$user_prefered_language;
-	#}
+	}
 
 	//To change language by GET link, override previous language
 	if($_GET && isset($_GET["lang"])) {
@@ -219,8 +219,40 @@ function smartlang_show_lang_options($hide_title=false, $show_name=false, $curre
 
 function smartlang_generate_flag_links_current($show_name) {
 	global $user_prefered_language_prefix;
+	switch ($user_prefered_language_prefix) {
+		//smartlang_generate_flag_links_except($current_location);
+		case 'notset' :
+		case 'en' :
+		case 'en_US' :
+			$user_prefered_language_prefix_flag="en";
+			break;
+		
+		case 'pt' :
+		case 'pt_BR' :
+			$user_prefered_language_prefix_flag="pt";
+			break;
+
+		case 'fr' :
+		case 'fr_FR' :
+			$user_prefered_language_prefix_flag="fr";
+			break;
+
+		case 'es' :
+		case 'es_ES' :
+			$user_prefered_language_prefix_flag="es";
+			break;
+
+		case 'zh' :
+		case 'zh_CN' :
+			$user_prefered_language_prefix_flag="zh";
+			break;
+
+		default:
+			$user_prefered_language_prefix_flag="en";
+			break;
+	}
 	 ?>
-		<img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/<?php echo $user_prefered_language_prefix; ?>.png" alt="<?php echo $user_prefered_language_prefix; ?>" style="display: inline;"> <?php if($show_name) echo "English";?>
+		<img src="<?php echo plugin_dir_url( __FILE__ ) ?>flags/<?php echo $user_prefered_language_prefix_flag; ?>.png" alt="<?php echo $user_prefered_language_prefix; ?>" style="display: inline;"> <?php if($show_name) echo "English";?>
 	<?php return;
 }
 
@@ -330,6 +362,7 @@ function smartlang_recent_posts_georefer_widget() {
 			min-height: 60px;
 			background-position: center;
 			background-size: contain;
+			background-repeat: no-repeat;
 		}
 		.smartlang_recent_posts_widget_container div {
 			line-height: 15px;
