@@ -14,6 +14,12 @@ add_action('loop_start', 'smartlang_check_language_user_and_content');
 add_action('pre_get_posts', 'smartlang_filter_by_tag', 10, 2);
 
 add_filter('pre_get_document_title', 'smartlang_define_title_apendix');
+add_action('wp_enqueue_scripts', 'load_scritps_smartlang');
+
+function load_scritps_smartlang() {
+	wp_enqueue_script('bootstrap4js', plugins_url('/assets/bootstrap.min.js', __FILE__), '', time() );
+	wp_enqueue_style('bootstrap4css', plugins_url('/assets/bootstrap.min.css', __FILE__), '', time() );
+}
 
 global $base_link;
 $base_link = $_SERVER['SERVER_NAME']; 
@@ -361,7 +367,7 @@ function smartlang_recent_posts_georefer_widget() {
 			background: #EDEDED;
 			min-height: 60px;
 			background-position: center;
-			background-size: contain;
+			background-size: cover;
 			background-repeat: no-repeat;
 		}
 		.smartlang_recent_posts_widget_container div {
