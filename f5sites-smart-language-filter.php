@@ -308,7 +308,7 @@ function smartlang_check_language_user_and_content($tags) {
 	}
 }
 
-function smartlang_recent_posts_georefer_widget() {
+function smartlang_recent_posts_georefer_widget($posts_per_page=10) {
 	?>
 	<div class="widget smartlang_recent_posts_widget">
 	
@@ -336,7 +336,7 @@ function smartlang_recent_posts_georefer_widget() {
 		} else {
 			$arro = array(
 				'cat' => $idObj->term_id,
-				'posts_per_page' => 10,
+				'posts_per_page' => $posts_per_page,
 				'tag' => "lang-".$user_prefered_language_prefix,
 			);
 		}
