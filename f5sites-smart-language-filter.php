@@ -86,7 +86,7 @@ function smartlang_set_user_language() {
 			$user_location_georefered="BR";
 		else
 			$user_location_georefered = $wclocation['country'];
-		die($user_location_georefered);
+		#die($user_location_georefered);
 	}
 
 	//If not, then uses basic http
