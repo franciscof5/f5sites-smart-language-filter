@@ -86,6 +86,7 @@ function smartlang_set_user_language() {
 			$user_location_georefered="BR";
 		else
 			$user_location_georefered = $wclocation['country'];
+		die($user_location_georefered);
 	}
 
 	//If not, then uses basic http
@@ -94,7 +95,7 @@ function smartlang_set_user_language() {
 			$user_location_georefered = locale_accept_from_http($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		//Last case it sets en_US
 		else
-			$user_location_georefered = "en_US";
+			$user_location_georefered = "pt_BR";
 	}
 	//Corrects BR to pt_BR
 	if($user_location_georefered=="BR")
@@ -112,19 +113,23 @@ function smartlang_set_user_language() {
 	} else {
 		$_SESSION["user_prefered_language"]=$user_prefered_language;
 	}
-
+	
 	//To change language by GET link, override previous language
 	if($_GET && isset($_GET["lang"])) {
 		$user_prefered_language=$_GET["lang"];
 		$_SESSION["user_prefered_language"]=$user_prefered_language;
 	}
+	#die($_SESSION["user_prefered_language"]);
 
-	//Whenever everthing fails, set en_US
+	//Whenever everthing fails, set pt_BR (was en_US)
 	if($user_prefered_language=="")
-		$user_prefered_language=="en_US";
+		$user_prefered_language=="pt_BR";
 	
 	if(!is_admin())
 	switch_to_locale($user_prefered_language);
+	
+	#die($user_prefered_language);
+
 	smartlang_define_title_apendix();
 	
 	$user_prefered_language_prefix = substr($user_prefered_language,0,2);
