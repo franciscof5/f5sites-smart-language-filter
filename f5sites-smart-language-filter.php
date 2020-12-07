@@ -8,10 +8,10 @@ Version 1.1
 Author URI: https://www.franciscomat.com/
 License: GPLv3
 */
-add_action('wp_loaded', 'smartlang_set_user_language', 1, 2);
+add_action('after_setup_theme', 'smartlang_set_user_language', 1, 2);
 add_action('loop_start', 'smartlang_check_language_user_and_content');
 
-add_action('pre_get_posts', 'smartlang_filter_by_tag', 10, 2);
+add_action('pre_get_posts', 'smartlang_filter_by_tag', 1, 2);
 
 add_filter('pre_get_document_title', 'smartlang_define_title_apendix');
 add_action('wp_enqueue_scripts', 'load_scritps_smartlang');
