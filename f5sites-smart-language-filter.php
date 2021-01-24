@@ -14,7 +14,7 @@ add_action('loop_start', 'smartlang_check_language_user_and_content');
 add_action('pre_get_posts', 'smartlang_filter_by_tag', 1, 2);
 
 add_filter('pre_get_document_title', 'smartlang_define_title_apendix');
-add_action('wp_enqueue_scripts', 'load_scritps_smartlang');
+#add_action('wp_enqueue_scripts', 'load_scritps_smartlang');
 
 function load_scritps_smartlang() {
 	wp_enqueue_script('bootstrap4js', plugins_url('/assets/bootstrap.min.js', __FILE__), '', time() );
